@@ -1,1 +1,1 @@
-# resume-to-linkedin
+# Resume-to-LinkedIn Formatter
