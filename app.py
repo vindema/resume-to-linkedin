@@ -21,7 +21,11 @@ DB_CONFIG = {
 }
 
 # Initialize S3
-s3 = boto3.client('s3', region_name=AWS_REGION)
+s3 = boto3.client('s3', 
+                  region_name=AWS_REGION,
+                  aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+                  aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY")
+)
 
 def upload_to_s3(file):
     s3.upload_fileobj(file, S3_BUCKET, file.name)
