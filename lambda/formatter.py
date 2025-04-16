@@ -1,7 +1,7 @@
 import json
 import pymysql
 import os
-import requests
+import urllib.request
 
 DB_HOST = os.environ['DB_HOST']
 DB_USER = os.environ['DB_USER']
@@ -9,37 +9,41 @@ DB_PASSWORD = os.environ['DB_PASSWORD']
 DB_NAME = os.environ['DB_NAME']
 HF_API_TOKEN = os.environ['HF_API_TOKEN']
 
-# Hugging Face model URL (Mistral)
 HF_API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2"
 
 def format_section(section, content):
     prompt = f"Rewrite this resume's {section} section for LinkedIn. Use first person, bullet points, and action verbs:\n\n{content}"
 
     headers = {
-        "Authorization": f"Bearer {HF_API_TOKEN}"
+        "Authorization": f"Bearer {HF_API_TOKEN}",
+        "Content-Type": "application/json"
     }
 
-    payload = {
+    payload = json.dumps({
         "inputs": prompt,
         "parameters": {
             "max_new_tokens": 300,
             "do_sample": False
         }
-    }
+    }).encode("utf-8")
 
-    response = requests.post(HF_API_URL, headers=headers, json=payload)
+    req = urllib.request.Request(HF_API_URL, data=payload, headers=headers, method="POST")
 
-    # Defensive check
-    if response.status_code != 200:
-        return f"Error: {response.status_code} - {response.text}"
+    try:
+        with urllib.request.urlopen(req) as response:
+            response_data = response.read()
+            result = json.loads(response_data.decode("utf-8"))
 
-    result = response.json()
-    if isinstance(result, list):
-        return result[0]['generated_text'].strip()
-    elif "generated_text" in result:
-        return result["generated_text"].strip()
-    else:
-        return "Error: Unexpected HF response"
+            if isinstance(result, list):
+                return result[0].get('generated_text', 'Error: No text returned').strip()
+            elif "generated_text" in result:
+                return result["generated_text"].strip()
+            else:
+                return "Error: Unexpected HF response"
+
+    except urllib.error.HTTPError as e:
+        error_details = e.read().decode()
+        return f"Error: {e.code} - {error_details}"
 
 def lambda_handler(event, context):
     conn = pymysql.connect(
