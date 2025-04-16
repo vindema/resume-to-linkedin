@@ -28,7 +28,7 @@ s3 = boto3.client('s3',
 )
 
 def upload_to_s3(file):
-    s3.upload_fileobj(file, S3_BUCKET, file.name)
+    s3.upload_fileobj(file, S3_BUCKET, file.name + ".pdf")
     return file.name
 
 def get_profile_data():
@@ -51,11 +51,12 @@ if uploaded_file:
         with tempfile.NamedTemporaryFile(delete=False) as tmp:
             tmp.write(uploaded_file.read())
             tmp.seek(0)
-            filename = upload_to_s3(tmp)
+            filename = upload_to_s3(tmp) + ".pdf"
     st.success(f"Uploaded `{filename}` to S3. Processing in background...")
 
 st.markdown("---")
 st.subheader("📋 LinkedIn-Optimized Sections")
+st.markdown("Refresh your page after uploading to show your formatted LinkedIn sections!")
 
 profile_data = get_profile_data()
 
