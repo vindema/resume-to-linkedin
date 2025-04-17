@@ -50,7 +50,7 @@ CREATE TABLE linkedin_profile_sections (
 - pip install -r requirements.txt
 
 # Setting Up the .env File
-- 
+- Replace all the placeholder texts for each key in the .env file with the corresponding information
 
 ## How to Run The Project
 - python3 -m venv venv
