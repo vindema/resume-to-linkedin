@@ -56,7 +56,7 @@ if uploaded_file:
 
 st.markdown("---")
 st.subheader("📋 LinkedIn-Optimized Sections")
-st.markdown("Wait 10 seconds after uploading and Refresh your page to show your formatted LinkedIn sections!")
+st.markdown("Wait 15 seconds after uploading and Refresh your page to show your formatted LinkedIn sections!")
 
 profile_data = get_profile_data()
 
