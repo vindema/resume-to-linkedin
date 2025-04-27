@@ -7,7 +7,7 @@ This project automatically extracts sections from an uploaded resume, reformats 
 - **Frontend:** Streamlit  
 - **Backend:** AWS Lambda functions (2)  
 - **Database:** Amazon RDS (MySQL)  
-- **LLM:** Hugging Face Inference API (`mistralai/Mistral-7B-Instruct-v0.1`)  
+- **LLM:** Together AI Inference API (`mistralai/Mistral-7B-Instruct-v0.1`)  
 - **Storage:** AWS S3 (for raw uploads, optional)  
 - **Trigger Mechanism:** Lambda → Lambda chain via insert event  
 
